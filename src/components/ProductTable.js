@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { camelCaseToSentence } from '@/utils/camelCaseToSentence'
 
 const ProductTable = () => {
   const [data, setData] = useState(null)
@@ -38,7 +39,7 @@ const ProductTable = () => {
                   className="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left"
                   key={index}
                 >
-                  {name}
+                  {camelCaseToSentence(name)}
                 </th>
               ))}
             </tr>
@@ -60,6 +61,7 @@ const ProductTable = () => {
             ))}
           </tbody>
         </table>
+        <p className="py-4 center">Total Products: {data.length}</p>
       </div>
     </div>
   )
