@@ -1,57 +1,63 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 const ProductTable = () => {
+  const [data, setData] = useState(null)
+  const [isLoading, setLoading] = useState(false)
+  const [tableHeaders, setTableHeaders] = useState([])
+
+  useEffect(() => {
+    setLoading(true)
+    fetch('/api/products')
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data)
+        setLoading(false)
+      })
+      .catch((error) => console.error(error))
+  }, [])
+
+  useEffect(() => {
+    if (data && !tableHeaders.length) {
+      setTableHeaders(Object.keys(data[0]))
+    }
+
+    return () => {}
+  }, [data, tableHeaders])
+
+  if (isLoading) return <p>Loading...</p>
+  if (!data) return <p>No product data</p>
+
   return (
     <div className="relative rounded-xl overflow-auto">
-      <div className="shadow-sm overflow-hidden">
+      <div className="shadow-sm">
         <table className="border-collapse table-auto w-full text-sm">
           <thead className="bg-slate-800">
             <tr>
-              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left">
-                Song
-              </th>
-              <th className="border-b dark:border-slate-600 font-medium p-4 py-3 text-slate-400 dark:text-slate-200 text-left">
-                Artist
-              </th>
-              <th className="border-b dark:border-slate-600 font-medium p-4 pr-8 py-3 text-slate-400 dark:text-slate-200 text-left">
-                Year
-              </th>
+              {tableHeaders.map((name, index) => (
+                <th
+                  className="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left"
+                  key={index}
+                >
+                  {name}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-slate-800">
-            <tr>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                The Sliding Mr. Bones (Next Stop, Pottersville)
-              </td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                Malcolm Lockyer
-              </td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                1961
-              </td>
-            </tr>
-            <tr>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                Witchy Woman
-              </td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                The Eagles
-              </td>
-              <td className="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                1972
-              </td>
-            </tr>
-            <tr>
-              <td className="border-b border-slate-200 dark:border-slate-600 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                Shining Star
-              </td>
-              <td className="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
-                Earth, Wind, and Fire
-              </td>
-              <td className="border-b border-slate-200 dark:border-slate-600 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                1975
-              </td>
-            </tr>
+            {data.map((item) => (
+              <tr key={item.productId}>
+                {Object.values(item).map((attribute, index) => (
+                  <td
+                    className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
+                    key={index}
+                  >
+                    {typeof attribute === 'object'
+                      ? attribute.join(', ')
+                      : attribute}
+                  </td>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
