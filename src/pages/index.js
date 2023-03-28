@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import ProductTable from '@/components/ProductTable'
+import Link from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,16 +19,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <header className={styles.description}>
-          <h2>Products</h2>
-          <h1>
-            BC Government Ministry of Citizens&apos; Services Information
-            Management Branch (IMB)
-          </h1>
-        </header>
-        <ProductTable />
-      </main>
+      <div className={styles.description}>
+        <h2>Products</h2>
+        <Link href="/product/new">Add new product</Link>
+      </div>
+      <ProductTable />
     </>
   )
 }

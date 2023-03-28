@@ -45,7 +45,7 @@ const ProductTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-slate-800">
-            {data.map((item) => (
+            {data?.map((item) => (
               <tr key={item.productId}>
                 {Object.values(item).map((attribute, index) => (
                   <td
