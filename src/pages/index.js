@@ -17,7 +17,12 @@ export default function Home() {
       </Head>
       <div className={styles.description}>
         <h2>Products</h2>
-        <Link href="/products/create">Add new product</Link>
+        <Link
+          href="/products/create"
+          className=" bg-indigo-700 text-white font-bold py-2 px-4  rounded hover:bg-gray-600"
+        >
+          Add new product
+        </Link>
       </div>
       <ProductTable />
     </>
