@@ -60,18 +60,11 @@ const ProductTable = () => {
         setLoading(false)
         // store full list in ref for resets
         productList.current = data
+        // set table headers based on data object keys
+        setTableHeaders(Object.keys(data[0]))
       })
       .catch((error) => console.error(error))
   }, [])
-
-  // set table headers based on data object keys
-  useEffect(() => {
-    if (data && !tableHeaders.length) {
-      setTableHeaders(Object.keys(data[0]))
-    }
-
-    return () => {}
-  }, [data, tableHeaders])
 
   if (isLoading) return <p>Loading...</p>
   if (!data) return <p>No product data</p>
