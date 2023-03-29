@@ -5,17 +5,25 @@ export default function handler(req, res) {
 
   switch (req.method) {
     case 'GET':
-      jsonfile.readFile('data/generated.json', 'utf-8', (err, data) => {
-        if (err) {
-          throw err
-        }
-        // find product from id
-        let product = data.find((product) => product.productId === productId)
-        // modify date format for html input
-        product.startDate = product.startDate.replaceAll('/', '-')
-        // send JSON object
-        res.status(200).json(product)
-      })
+      if (productId) {
+        jsonfile.readFile('data/generated.json', 'utf-8', (err, data) => {
+          if (err) {
+            throw err
+          }
+          // find product from id
+          let product = data?.find((product) => product.productId === productId)
+
+          if (product) {
+            // modify date format for html input
+            product.startDate = product?.startDate.replaceAll('/', '-')
+            // send JSON object
+            res.status(200).json(product)
+          } else {
+            // product not found
+            res.status(404).end()
+          }
+        })
+      }
       break
     case 'PUT':
       let editProduct = req.body

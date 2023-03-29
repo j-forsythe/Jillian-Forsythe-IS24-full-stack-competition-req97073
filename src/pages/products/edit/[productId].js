@@ -35,13 +35,15 @@ const EditProduct = () => {
   // fetch product data on render to pre-populate form
   useEffect(() => {
     setLoading(true)
-    fetch(`/api/products/${productId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data)
-        setLoading(false)
-      })
-      .catch((error) => console.error(error))
+    if (productId) {
+      fetch(`/api/products/${productId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setData(data)
+        })
+        .catch((error) => console.error(error))
+    }
+    setLoading(false)
   }, [productId])
 
   if (isLoading) return <p>Loading...</p>
