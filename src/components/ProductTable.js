@@ -7,6 +7,7 @@ const ProductTable = () => {
   const [isLoading, setLoading] = useState(false)
   const [tableHeaders, setTableHeaders] = useState([])
 
+  // get all products on render
   useEffect(() => {
     setLoading(true)
     fetch('/api/products')
@@ -18,6 +19,7 @@ const ProductTable = () => {
       .catch((error) => console.error(error))
   }, [])
 
+  // set table headers based on data object keys
   useEffect(() => {
     if (data && !tableHeaders.length) {
       setTableHeaders(Object.keys(data[0]))
@@ -49,23 +51,32 @@ const ProductTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-slate-800">
-            {data?.map((item) => (
-              <tr key={item.productId}>
-                {Object.values(item).map((attribute, index) => (
-                  <td
-                    className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
-                    key={index}
-                  >
-                    {typeof attribute === 'object'
-                      ? attribute.join(', ')
-                      : attribute}
+            {data?.map(
+              (
+                item, // iterate over each product
+              ) => (
+                <tr key={item.productId}>
+                  {Object.values(item).map(
+                    (
+                      attribute,
+                      index, // iterate over each product attribute
+                    ) => (
+                      <td
+                        className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
+                        key={index}
+                      >
+                        {attribute.isArray // if attribute is an array transform into comma separated string
+                          ? attribute.join(', ')
+                          : attribute}
+                      </td>
+                    ),
+                  )}
+                  <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+                    <Link href={`/products/edit/${item.productId}`}>Edit</Link>
                   </td>
-                ))}
-                <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                  <Link href={`/products/edit/${item.productId}`}>Edit</Link>
-                </td>
-              </tr>
-            ))}
+                </tr>
+              ),
+            )}
           </tbody>
         </table>
         <p className="py-4 center">Total Products: {data.length}</p>

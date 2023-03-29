@@ -129,7 +129,6 @@ const ProductForm = ({
               </label>
               <label>
                 <Field
-                  //   className={styles.field}
                   value="Waterfall"
                   type="radio"
                   name="methodology"

@@ -5,6 +5,7 @@ import ProductForm from '@/components/ProductForm'
 const NewProduct = () => {
   const [productAdded, setProductAdded] = useState(false)
 
+  // send new product data to API
   const createProduct = (values) => {
     fetch('/api/products', {
       method: 'POST',
@@ -16,6 +17,7 @@ const NewProduct = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log('Success:', data)
+        // inform user product added successfully
         setProductAdded(true)
       })
       .catch((error) => {

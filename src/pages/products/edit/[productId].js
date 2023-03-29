@@ -10,6 +10,7 @@ const EditProduct = () => {
   const [isLoading, setLoading] = useState(false)
   const [productUpdated, setProductUpdated] = useState(false)
 
+  // send updated product data
   const updateProduct = (values) => {
     fetch(`/api/products/${productId}`, {
       method: 'PUT',
@@ -21,6 +22,7 @@ const EditProduct = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log('Success:', data)
+        // if call is successful update state to inform user
         setProductUpdated(true)
       })
       .catch((error) => {
@@ -28,6 +30,7 @@ const EditProduct = () => {
       })
   }
 
+  // fetch product data on render to pre-populate form
   useEffect(() => {
     setLoading(true)
     fetch(`/api/products/${productId}`)
@@ -41,6 +44,7 @@ const EditProduct = () => {
 
   if (isLoading) return <p>Loading...</p>
   if (!data) return <p>No product data</p>
+
   return (
     <>
       <Link href="/">&lt;&nbsp;Back</Link>

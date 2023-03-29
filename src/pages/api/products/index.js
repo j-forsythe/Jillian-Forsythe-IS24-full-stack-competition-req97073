@@ -30,7 +30,7 @@ export default function handler(req, res) {
         // add new record to products
         data.push(newProduct)
 
-        // write JSON string to a file
+        // write JSON to a file
         jsonfile.writeFile(
           'data/generated.json',
           data,
@@ -43,17 +43,12 @@ export default function handler(req, res) {
           },
         )
       })
+      // respond with new product data
       res.status(201).json({
         success: true,
         data: newProduct,
       })
       break
-    //     case 'PUT':
-    //       //...
-    //       break
-    //     case 'DELETE':
-    //       //...
-    //       break
     default: // Method not allowed
       res.status(405).end()
       break
