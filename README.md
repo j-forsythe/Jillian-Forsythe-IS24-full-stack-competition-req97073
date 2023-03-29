@@ -1,15 +1,31 @@
+# citz-imb-full-stack-code-challenge-req97073
+
+## By [Jillian Forsythe](https://github.com/j-forsythe)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+
+## System Requirements
+
+- Node.js 14.7.0 or newer
+- MacOS, Windows (including WSL), and Linux are supported
+- Yarn, see installation below:
+
+  ```bash
+  npm install --global yarn
+  ```
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
 
 ```bash
-npm run dev
-# or
+yarn install
+```
+
+Second, run the development server:
+
+```bash
 yarn dev
-# or
-pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
