@@ -21,7 +21,12 @@ const ProductTable = () => {
       .then(() => {
         console.log('Succesfully deleted')
         // remove product from state to avoid refetching
-        setData(data.filter((product) => product.productId !== productId))
+        let updatedList = data.filter(
+          (product) => product.productId !== productId,
+        )
+        setData(updatedList)
+        // update stored list
+        productList.current = updatedList
       })
       .catch((error) => {
         console.error('Error:', error)
@@ -30,10 +35,18 @@ const ProductTable = () => {
 
   const handleSearch = (values) => {
     const { attribute, query } = values
-    setData(data.filter((product) => product[attribute] === query))
+
+    // if attribute is array (such as developers) check if query is included in array otherwise check string against string
+    const searchData = data.filter((product) =>
+      Array.isArray(product[attribute])
+        ? product[attribute].includes(query)
+        : product[attribute] === query,
+    )
+    setData(searchData)
   }
 
   const handleClear = () => {
+    // reset data to stored list
     setData(productList.current)
   }
 
@@ -86,7 +99,7 @@ const ProductTable = () => {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-slate-800">
-              {
+              {data.length > 0 ? (
                 /* iterate over each product */
                 data?.map((item) => (
                   <tr key={item.productId}>
@@ -124,7 +137,16 @@ const ProductTable = () => {
                     </td>
                   </tr>
                 ))
-              }
+              ) : (
+                <tr>
+                  <td
+                    colSpan={tableHeaders.length + 1}
+                    className="w-full border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400 text-center"
+                  >
+                    No products found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
