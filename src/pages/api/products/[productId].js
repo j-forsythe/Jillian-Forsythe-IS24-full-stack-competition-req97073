@@ -56,9 +56,9 @@ export default function handler(req, res) {
         data: editProduct,
       })
       break
-    //     case 'DELETE':
-    //       //...
-    //       break
+    case 'DELETE':
+      res.status(204).end()
+      break
     default: // Method not allowed
       res.status(405).end()
       break
