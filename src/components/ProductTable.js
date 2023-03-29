@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { camelCaseToSentence } from '@/utils/camelCaseToSentence'
+import Link from 'next/link'
 
 const ProductTable = () => {
   const [data, setData] = useState(null)
@@ -42,6 +43,9 @@ const ProductTable = () => {
                   {camelCaseToSentence(name)}
                 </th>
               ))}
+              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left">
+                Manage
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-slate-800">
@@ -57,6 +61,9 @@ const ProductTable = () => {
                       : attribute}
                   </td>
                 ))}
+                <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+                  <Link href={`/products/edit/${item.productId}`}>Edit</Link>
+                </td>
               </tr>
             ))}
           </tbody>

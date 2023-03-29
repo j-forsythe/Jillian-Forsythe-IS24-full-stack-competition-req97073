@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import {
   Formik,
@@ -18,37 +18,27 @@ const styles = {
   errorMsg: 'text-red-500 text-sm',
 }
 
-const ProductForm = () => {
-  const [productAdded, setProductAdded] = useState(false)
-
+const ProductForm = ({
+  productData = undefined,
+  handleSubmit = () => {},
+  submitSuccess = false,
+}) => {
   return (
     <>
       <Formik
-        initialValues={{
-          productId: '',
-          productName: '',
-          productOwnerName: '',
-          Developers: [''],
-          scrumMasterName: '',
-          startDate: '',
-          methodology: 'Agile',
-        }}
+        initialValues={
+          productData ?? {
+            productId: '',
+            productName: '',
+            productOwnerName: '',
+            Developers: [''],
+            scrumMasterName: '',
+            startDate: '',
+            methodology: 'Agile',
+          }
+        }
         onSubmit={(values) => {
-          fetch('/api/products', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(values),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log('Success:', data)
-              setProductAdded(true)
-            })
-            .catch((error) => {
-              console.error('Error:', error)
-            })
+          handleSubmit(values)
           setIsSubmitting(false)
         }}
       >
@@ -155,13 +145,13 @@ const ProductForm = () => {
                 className={styles.button}
                 disabled={isSubmitting}
               >
-                Add Product
+                Save
               </button>
             </div>
           </Form>
         )}
       </Formik>
-      {productAdded && <p>Product Added!</p>}
+      {submitSuccess && <p>Product {productData ? 'Updated' : 'Added'}!</p>}
     </>
   )
 }
