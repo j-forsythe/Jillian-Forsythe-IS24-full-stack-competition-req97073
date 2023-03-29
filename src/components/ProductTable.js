@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { camelCaseToSentence } from '@/utils/camelCaseToSentence'
 import Link from 'next/link'
 import DeleteProduct from './DeleteProduct'
+import SearchProducts from './SearchProducts'
 
 const ProductTable = () => {
   const [data, setData] = useState(null)
   const [isLoading, setLoading] = useState(false)
   const [tableHeaders, setTableHeaders] = useState([])
+  const productList = useRef({})
 
   const handleDeleteProduct = (productId) => {
     // send delete request
@@ -26,6 +28,15 @@ const ProductTable = () => {
       })
   }
 
+  const handleSearch = (values) => {
+    const { attribute, query } = values
+    setData(data.filter((product) => product[attribute] === query))
+  }
+
+  const handleClear = () => {
+    setData(productList.current)
+  }
+
   // get all products on render
   useEffect(() => {
     setLoading(true)
@@ -34,6 +45,8 @@ const ProductTable = () => {
       .then((data) => {
         setData(data)
         setLoading(false)
+        // store full list in ref for resets
+        productList.current = data
       })
       .catch((error) => console.error(error))
   }, [])
@@ -51,69 +64,72 @@ const ProductTable = () => {
   if (!data) return <p>No product data</p>
 
   return (
-    <div className="relative rounded-xl overflow-auto">
-      <div className="shadow-sm">
-        <table className="border-collapse table-auto w-full text-sm">
-          <thead className="bg-slate-800">
-            <tr>
-              {tableHeaders.map((name, index) => (
-                <th
-                  className="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left"
-                  key={index}
-                >
-                  {camelCaseToSentence(name)}
+    <>
+      <SearchProducts onSearch={handleSearch} onClear={handleClear} />
+      <p className="py-4 center">Total Products: {data.length}</p>
+      <div className="relative rounded-xl overflow-auto">
+        <div className="shadow-sm">
+          <table className="border-collapse table-auto w-full text-sm">
+            <thead className="bg-slate-800">
+              <tr>
+                {tableHeaders.map((name, index) => (
+                  <th
+                    className="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left"
+                    key={index}
+                  >
+                    {camelCaseToSentence(name)}
+                  </th>
+                ))}
+                <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left">
+                  Manage
                 </th>
-              ))}
-              <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 py-3 text-slate-400 dark:text-slate-200 text-left">
-                Manage
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white dark:bg-slate-800">
-            {
-              /* iterate over each product */
-              data?.map((item) => (
-                <tr key={item.productId}>
-                  {
-                    /* iterate over each product attribute */
-                    Object.values(item).map((attribute, index) => (
-                      <td
-                        className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
-                        key={index}
-                      >
-                        {
-                          /* if attribute is an array transform into comma separated string */
-                          Array.isArray(attribute)
-                            ? attribute.join(', ')
-                            : attribute
-                        }
-                      </td>
-                    ))
-                  }
-                  <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                    <div className=" flex flex-col items-center">
-                      <Link
-                        href={`/products/edit/${item.productId}`}
-                        className="mb-4"
-                      >
-                        Edit
-                      </Link>
-                      <DeleteProduct
-                        productData={item}
-                        onDeleteProduct={() =>
-                          handleDeleteProduct(item.productId)
-                        }
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-        <p className="py-4 center">Total Products: {data.length}</p>
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-slate-800">
+              {
+                /* iterate over each product */
+                data?.map((item) => (
+                  <tr key={item.productId}>
+                    {
+                      /* iterate over each product attribute */
+                      Object.values(item).map((attribute, index) => (
+                        <td
+                          className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
+                          key={index}
+                        >
+                          {
+                            /* if attribute is an array transform into comma separated string */
+                            Array.isArray(attribute)
+                              ? attribute.join(', ')
+                              : attribute
+                          }
+                        </td>
+                      ))
+                    }
+                    <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+                      <div className=" flex flex-col items-center">
+                        <Link
+                          href={`/products/edit/${item.productId}`}
+                          className="mb-4"
+                        >
+                          Edit
+                        </Link>
+                        <DeleteProduct
+                          productData={item}
+                          onDeleteProduct={() =>
+                            handleDeleteProduct(item.productId)
+                          }
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
