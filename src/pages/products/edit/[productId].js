@@ -7,6 +7,7 @@ const EditProduct = () => {
   const router = useRouter()
   const { productId } = router.query
   const [data, setData] = useState(null)
+  const [hasError, setHasError] = useState(false)
   const [isLoading, setLoading] = useState(false)
   const [productUpdated, setProductUpdated] = useState(false)
 
@@ -27,6 +28,7 @@ const EditProduct = () => {
       })
       .catch((error) => {
         console.error('Error:', error)
+        setHasError(true)
       })
   }
 
@@ -53,6 +55,7 @@ const EditProduct = () => {
         productData={data}
         submitSuccess={productUpdated}
         handleSubmit={updateProduct}
+        submitError={hasError}
       />
     </>
   )

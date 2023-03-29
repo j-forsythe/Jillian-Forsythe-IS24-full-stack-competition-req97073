@@ -3,6 +3,7 @@ import Link from 'next/link'
 import ProductForm from '@/components/ProductForm'
 
 const NewProduct = () => {
+  const [hasError, setHasError] = useState(false)
   const [productAdded, setProductAdded] = useState(false)
 
   // send new product data to API
@@ -22,6 +23,7 @@ const NewProduct = () => {
       })
       .catch((error) => {
         console.error('Error:', error)
+        setHasError(true)
       })
   }
 
@@ -29,7 +31,11 @@ const NewProduct = () => {
     <>
       <Link href="/">&lt;&nbsp;Back</Link>
       <h1>New Product</h1>
-      <ProductForm handleSubmit={createProduct} submitSuccess={productAdded} />
+      <ProductForm
+        handleSubmit={createProduct}
+        submitSuccess={productAdded}
+        submitError={hasError}
+      />
     </>
   )
 }

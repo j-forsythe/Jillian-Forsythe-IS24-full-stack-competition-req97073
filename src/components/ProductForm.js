@@ -22,6 +22,7 @@ const ProductForm = ({
   productData = undefined,
   handleSubmit = () => {},
   submitSuccess = false,
+  submitError = false,
 }) => {
   return (
     <>
@@ -151,6 +152,12 @@ const ProductForm = ({
         )}
       </Formik>
       {submitSuccess && <p>Product {productData ? 'Updated' : 'Added'}!</p>}
+      {submitError && (
+        <p>
+          There was an error {productData ? 'updating' : 'adding'} the product.
+          Please try again later.
+        </p>
+      )}
     </>
   )
 }
