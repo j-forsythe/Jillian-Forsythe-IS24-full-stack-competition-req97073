@@ -128,7 +128,7 @@ const ProductTable = () => {
                           Edit
                         </Link>
                         <DeleteProduct
-                          productData={item}
+                          productName={item.productName}
                           onDeleteProduct={() =>
                             handleDeleteProduct(item.productId)
                           }
