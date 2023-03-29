@@ -1,11 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { camelCaseToSentence } from '@/utils/camelCaseToSentence'
 import Link from 'next/link'
+import DeleteProduct from './DeleteProduct'
 
 const ProductTable = () => {
   const [data, setData] = useState(null)
   const [isLoading, setLoading] = useState(false)
   const [tableHeaders, setTableHeaders] = useState([])
+
+  const handleDeleteProduct = (productId) => {
+    // send delete request
+    fetch(`/api/products/${productId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(() => {
+        console.log('Succesfully deleted')
+        // remove product from state to avoid refetching
+        setData(data.filter((product) => product.productId !== productId))
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
+  }
 
   // get all products on render
   useEffect(() => {
@@ -51,32 +70,45 @@ const ProductTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-slate-800">
-            {data?.map(
-              (
-                item, // iterate over each product
-              ) => (
+            {
+              /* iterate over each product */
+              data?.map((item) => (
                 <tr key={item.productId}>
-                  {Object.values(item).map(
-                    (
-                      attribute,
-                      index, // iterate over each product attribute
-                    ) => (
+                  {
+                    /* iterate over each product attribute */
+                    Object.values(item).map((attribute, index) => (
                       <td
                         className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"
                         key={index}
                       >
-                        {attribute.isArray // if attribute is an array transform into comma separated string
-                          ? attribute.join(', ')
-                          : attribute}
+                        {
+                          /* if attribute is an array transform into comma separated string */
+                          Array.isArray(attribute)
+                            ? attribute.join(', ')
+                            : attribute
+                        }
                       </td>
-                    ),
-                  )}
+                    ))
+                  }
                   <td className="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                    <Link href={`/products/edit/${item.productId}`}>Edit</Link>
+                    <div className=" flex flex-col items-center">
+                      <Link
+                        href={`/products/edit/${item.productId}`}
+                        className="mb-4"
+                      >
+                        Edit
+                      </Link>
+                      <DeleteProduct
+                        productData={item}
+                        onDeleteProduct={() =>
+                          handleDeleteProduct(item.productId)
+                        }
+                      />
+                    </div>
                   </td>
                 </tr>
-              ),
-            )}
+              ))
+            }
           </tbody>
         </table>
         <p className="py-4 center">Total Products: {data.length}</p>

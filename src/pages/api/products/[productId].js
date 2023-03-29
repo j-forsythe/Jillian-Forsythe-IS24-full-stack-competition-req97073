@@ -57,6 +57,27 @@ export default function handler(req, res) {
       })
       break
     case 'DELETE':
+      jsonfile.readFile('data/generated.json', 'utf-8', (err, data) => {
+        if (err) {
+          throw err
+        }
+        // find product from id
+        const index = data.findIndex((p) => p.productId === productId)
+        data.splice(index, 1)
+
+        // write updated JSON to file
+        jsonfile.writeFile(
+          'data/generated.json',
+          data,
+          { spaces: 4 },
+          (err) => {
+            if (err) {
+              throw err
+            }
+            console.log('JSON data is saved.')
+          },
+        )
+      })
       res.status(204).end()
       break
     default: // Method not allowed
