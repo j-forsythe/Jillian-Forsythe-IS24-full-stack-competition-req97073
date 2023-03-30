@@ -25,6 +25,7 @@ const EditProduct = () => {
         console.log('Success:', data)
         // if call is successful update state to inform user
         setProductUpdated(true)
+        router.push('/')
       })
       .catch((error) => {
         console.error('Error:', error)

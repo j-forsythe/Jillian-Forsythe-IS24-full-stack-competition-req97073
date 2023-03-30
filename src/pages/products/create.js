@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import ProductForm from '@/components/ProductForm'
 
 const NewProduct = () => {
   const [hasError, setHasError] = useState(false)
   const [productAdded, setProductAdded] = useState(false)
+  const router = useRouter()
 
   // send new product data to API
   const createProduct = (values) => {
@@ -20,6 +22,7 @@ const NewProduct = () => {
         console.log('Success:', data)
         // inform user product added successfully
         setProductAdded(true)
+        router.push('/')
       })
       .catch((error) => {
         console.error('Error:', error)

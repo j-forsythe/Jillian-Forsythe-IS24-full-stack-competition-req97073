@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
 import { Formik, Field, Form, FieldArray } from 'formik'
 
@@ -76,29 +76,38 @@ const ProductForm = ({
             required
             render={(arrayHelpers) =>
               values.Developers.map((developer, index) => (
-                <div key={index}>
+                <Fragment key={index}>
                   <Field
                     name={`Developers.${index}`}
-                    className={styles.field}
+                    className={`${styles.field} ${index === 0 ? 'mb-6' : ''}`}
                     required
                   />
-                  {values.Developers.length > 1 && index > 0 && (
-                    <button
-                      type="button"
-                      className="p-4"
-                      onClick={() => arrayHelpers.remove(index)} // remove a developer from the list
-                    >
-                      -
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    className="p-4"
-                    onClick={() => arrayHelpers.insert(index, '')} // insert an empty string at a position
-                  >
-                    +
-                  </button>
-                </div>
+                  {
+                    /* There must always be one developer */
+                    values.Developers.length > 1 && index > 0 && (
+                      <button
+                        type="button"
+                        className="p-4"
+                        onClick={() => arrayHelpers.remove(index)} // remove a developer from the list
+                      >
+                        -
+                      </button>
+                    )
+                  }
+                  {
+                    /* Max developers is five */
+                    values.Developers.length < 5 &&
+                      index >= values.Developers.length - 1 && (
+                        <button
+                          type="button"
+                          className="p-4"
+                          onClick={() => arrayHelpers.insert(index + 1, '')} // insert an empty string at a position
+                        >
+                          +
+                        </button>
+                      )
+                  }
+                </Fragment>
               ))
             }
           />
